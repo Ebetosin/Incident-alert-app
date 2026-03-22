@@ -1,0 +1,54 @@
+server.port=
+server.shutdown=graceful
+spring.lifecycle.timeout-per-shutdown-phase=
+
+# ── Database ─────────────────────────────────────────────
+spring.datasource.url=
+spring.datasource.username=
+spring.datasource.password=
+spring.datasource.driver-class-name=org.postgresql.Driver
+spring.datasource.hikari.maximum-pool-size=
+spring.datasource.hikari.minimum-idle=
+
+spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
+spring.jpa.hibernate.ddl-auto=
+spring.jpa.show-sql=
+spring.jpa.open-in-view=
+
+# ── Redis ────────────────────────────────────────────────
+spring.data.redis.host=
+spring.data.redis.port=
+spring.data.redis.password=
+spring.data.redis.timeout=
+spring.data.redis.lettuce.pool.max-active=
+spring.data.redis.lettuce.pool.max-idle=
+spring.data.redis.lettuce.pool.min-idle=
+
+# ── JWT ──────────────────────────────────────────────────
+app.jwt.secret=
+app.jwt.expiration-ms=
+
+# ── Actuator ─────────────────────────────────────────────
+management.endpoints.web.exposure.include=
+management.endpoint.health.show-details=
+
+# ── API Documentation ───────────────────────────────────
+springdoc.swagger-ui.path=
+springdoc.api-docs.path=
+
+# ── Blob Storage ─────────────────────────────────────────
+app.blob.endpoint=
+app.blob.bucket=
+app.cdn.base-url=
+
+# ── Logging ──────────────────────────────────────────────
+logging.level.com.ebenn.incidenthub=
+logging.pattern.console=
+
+# ── Event Simulator ──────────────────────────────────────
+app.simulator.enabled=
+app.simulator.interval-ms=
+
+# ── Bootstrap Admin (optional local-only values) ─────────
+app.bootstrap.admin-email=
+app.bootstrap.admin-password=

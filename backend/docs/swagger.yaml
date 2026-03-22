@@ -1,0 +1,157 @@
+openapi: 3.0.3
+info:
+  title: Incident Alert Hub API
+  description: |
+    Production-grade incident monitoring and alerting platform.
+    Supports real-time WebSocket notifications, webhook ingestion from external
+    monitoring systems, and full incident lifecycle management.
+  version: 1.0.0
+  contact:
+    name: API Support
+servers:
+  - url: http://localhost:81/api
+    description: Local (via Nginx LB)
+  - url: http://localhost:8090/api
+    description: Direct backend
+tags:
+  - name: Incidents
+    description: Incident CRUD and lifecycle management
+  - name: Webhooks
+    description: External monitoring system integrations
+paths:
+  /incidents:
+    get:
+      tags: [Incidents]
+      summary: List incidents (paginated)
+      parameters:
+        - name: page
+          in: query
+          schema: { type: integer, default: 0 }
+        - name: size
+          in: query
+          schema: { type: integer, default: 20, maximum: 100 }
+      responses:
+        '200':
+          description: Paginated list of incidents
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedIncidentResponse'
+    post:
+      tags: [Incidents]
+      summary: Create a new incident
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IncidentRequest'
+      responses:
+        '201':
+          description: Incident created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IncidentResponse'
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /incidents/{id}:
+    get:
+      tags: [Incidents]
+      summary: Get incident by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer, format: int64 }
+      responses:
+        '200':
+          description: Incident details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IncidentResponse'
+        '404':
+          description: Incident not found
+  /incidents/{id}/status:
+    patch:
+      tags: [Incidents]
+      summary: Update incident status
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer, format: int64 }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum: [OPEN, ACKNOWLEDGED, INVESTIGATING, RESOLVED, CLOSED]
+      responses:
+        '200':
+          description: Status updated
+        '404':
+          description: Incident not found
+  /webhooks/alerts:
+    post:
+      tags: [Webhooks]
+      summary: Receive alert from external monitoring system
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                service: { type: string }
+                severity: { type: string }
+                message: { type: string }
+      responses:
+        '202':
+          description: Alert accepted
+components:
+  schemas:
+    IncidentRequest:
+      type: object
+      required: [serviceName, severity, message]
+      properties:
+        serviceName: { type: string, maxLength: 100 }
+        severity: { type: string, enum: [LOW, MEDIUM, HIGH, CRITICAL] }
+        message: { type: string, maxLength: 1000 }
+    IncidentResponse:
+      type: object
+      properties:
+        id: { type: integer, format: int64 }
+        serviceName: { type: string }
+        severity: { type: string }
+        status: { type: string }
+        message: { type: string }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+    PagedIncidentResponse:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/IncidentResponse'
+        totalElements: { type: integer }
+        totalPages: { type: integer }
+        number: { type: integer }
+        size: { type: integer }
+    ErrorResponse:
+      type: object
+      properties:
+        timestamp: { type: string }
+        status: { type: integer }
+        error: { type: string }
+        message: { type: string }

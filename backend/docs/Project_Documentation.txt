@@ -1,0 +1,20 @@
+Incident Alert Hub - Documentation
+
+Purpose:
+Provide an incident intake and real-time alert board with production-style backend patterns.
+
+Key components:
+1. REST APIs for incident management.
+2. WebSocket push for live incident board updates.
+3. Webhook endpoint for external monitoring systems.
+4. Redis for hot-cache and distributed rate limiting.
+5. PostgreSQL as source-of-truth datastore.
+6. MinIO for blob storage integration pattern.
+7. CDN path support via configurable base URL.
+8. Nginx load balancer as front door.
+9. Kubernetes deployment templates.
+
+Operational practices:
+- Stable contracts with OpenAPI.
+- Consistent error handling and throttling.
+- Scalable stateless service containers.

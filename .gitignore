@@ -1,0 +1,10 @@
+.idea/
+.vscode/
+backend/target/
+frontend/node_modules/
+frontend/dist/
+.DS_Store
+
+# Sensitive config (use application.properties.example as template)
+backend/src/main/resources/application.properties
+backend/infra/.env
